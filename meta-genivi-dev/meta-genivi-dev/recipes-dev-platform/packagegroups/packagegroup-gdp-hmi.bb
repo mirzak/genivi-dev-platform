@@ -15,6 +15,7 @@ PACKAGES = "\
     "
 
 RDEPENDS_${PN} += "\
+    weston-init \
     connectedhome \
     fmradio \
     gdp-hmi-mouse-test \
