@@ -21,14 +21,12 @@ FILES_${PN} += "\
     ${libdir}/* \
     /opt/gdp-hmi/bin/gdp-hmi \
     /usr/share/applications/* \
-    ${systemd_unitdir}/* \
-    /home/* \
+    ${systemd_user_unitdir} \
 "
 
 do_install_append() {
-        install -d ${D}${libdir}/systemd/user
-        install -m 0444 ${WORKDIR}/gdp-new-hmi.service \
-                        ${D}${libdir}/systemd/user
-        mkdir -p ${D}/home/root/.config/systemd/user/default.target.wants/gdp-new-hmi.service
-	ln -sf /usr/lib/systemd/user/gdp-new-hmi.service ${D}/home/root/.config/systemd/user/default.target.wants/gdp-new-hmi.service
+    install -d ${D}${systemd_user_unitdir}
+    install -p -D ${WORKDIR}/gdp-new-hmi.service ${D}${systemd_user_unitdir}/gdp-new-hmi.service
+    install -d ${D}${sysconfdir}/systemd/user/default.target.wants
+    ln -sf ${systemd_user_unitdir}/gdp-new-hmi.service ${D}${sysconfdir}/systemd/user/default.target.wants
 }
