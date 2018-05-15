@@ -52,3 +52,8 @@ IMAGE_INSTALL_append_rpi = " \
 	packagegroup-base \
 	mesa-megadriver \
 "
+
+EXTRA_USERS_PARAMS = "\
+    useradd -p '' -d /run/platform/display --shell /bin/false --comment \"Display daemon\" display; \
+    usermod -a -G weston-launch,video,input display; \
+"
