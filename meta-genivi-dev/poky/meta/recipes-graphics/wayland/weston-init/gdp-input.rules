@@ -1,0 +1,1 @@
+SUBSYSTEM=="input", MODE="0660", GROUP="input", TAG+="systemd", ENV{SYSTEMD_WANTS}="weston.service"
