@@ -1,16 +1,12 @@
 FILESEXTRAPATHS_append := ":${THISDIR}/${PN}"
 
 SRC_URI_append = "\
-    file://weston.service \
     file://GDP_AM_Button.png \
     file://GDP_Background.png \
     file://GDP_Browser_Button.png \
-    file://start_am-poc.sh \
     file://weston.ini \
+    file://0001-Allow-regular-users-to-launch-Weston_2.0.0.patch \
 "
-
-inherit systemd
-DEPENDS_append = " systemd"
 
 RDEPENDS_${PN}_append_qemux86 = " mesa-megadriver"
 RDEPENDS_${PN}_append_qemux86-64 = " mesa-megadriver"
@@ -37,17 +33,13 @@ CFLAGS_append_rpi ="\
 "
 
 do_install_append() {
-    install -m644 ${WORKDIR}/GDP*.png ${D}/usr/share/weston
-    mkdir -p ${D}/${bindir}/
-    cp ${WORKDIR}/start_am-poc.sh ${D}/${bindir}
-    mkdir -p ${D}${systemd_unitdir}/system/
-    cp ${WORKDIR}/weston.service ${D}${systemd_unitdir}/system/
-    mkdir -p ${D}${systemd_unitdir}/system/multi-user.target.wants/
-    ln -sf /lib/systemd/system/weston.service ${D}/${systemd_unitdir}/system/multi-user.target.wants/weston.service
+    install -d ${D}/usr/share/weston
+    install -m 644 ${WORKDIR}/GDP*.png ${D}/usr/share/weston
 
-    WESTON_INI_CONFIG=${sysconfdir}/xdg/weston
-    install -d ${D}${WESTON_INI_CONFIG}
-    install -m 0644 ${WORKDIR}/weston.ini ${D}${WESTON_INI_CONFIG}/weston.ini
+    install -d ${D}${sysconfdir}/xdg/weston
+    install -m 0644 ${WORKDIR}/weston.ini ${D}${sysconfdir}/xdg/weston/weston.ini
 }
 
-FILES_${PN} += "${systemd_unitdir}/system/*"
+CONFFILES_${PN} += "${sysconfdir}/xdg/weston/weston.ini"
+
+EXTRA_OECONF_append = " --enable-sys-uid"
