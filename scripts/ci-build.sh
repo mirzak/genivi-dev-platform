@@ -558,8 +558,17 @@ if [[ "$CREATE_RELEASE_DIR" == "true" ]]; then
   cp staging/files-in-image.txt release/ 2>/dev/null
   cp staging/build_info.txt release/ 2>/dev/null
   cp staging/license.manifest release/ 2>/dev/null
-  set -e
+
+  # The artifact upload in CI actually fails if there are broken symlinks. They
+  # might be broken for various reasons, but one could be that we move some image
+  # files from staging to release, leaving some dangling symlinks.  Remove all
+  # broken symlinks from the result directories, staging/ and release/
+
+  find release -type l  -exec rm "{}" \;
 fi
+
+# Also clean any broken links in staging
+find staging -type l  -exec rm "{}" \;
 
 set +e
 echo "Artifacts in staging/ and release/"
@@ -567,6 +576,5 @@ ls -al staging/ release/
 echo
 echo "...in release/images/ :"
 ls -al release/images/
-set -e
 
 cleanup
