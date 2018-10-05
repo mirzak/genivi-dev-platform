@@ -52,3 +52,6 @@ TEST_SUITES = "ping ssh scp date dmesg connman systemd gdp devpackages"
 # the type is not defined in machine-specific templates. (At least one value
 # for IMAGE_FSTYPE is required or the build will fail)
 CUSTOM_IMAGE_FSTYPE ??= "tar.gz"
+
+# Silence warning about x11 not being in DISTRO_FEATURES
+SKIP_META_GNOME_SANITY_CHECK = 1
